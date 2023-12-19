@@ -4,6 +4,7 @@ import { useFonts, RougeScript_400Regular } from '@expo-google-fonts/rouge-scrip
 import * as SplashScreen from 'expo-splash-screen';
 
 export default function Header() {
+  console.log("la font est la ou quoiiii");
 
   const [loaded] = useFonts({
     RougeScript_400Regular,
@@ -11,11 +12,13 @@ export default function Header() {
   
   const onLayoutRootView = useCallback(async () => {
     if (loaded) {
+      console.log("la font est la ou quoiiii");
       await SplashScreen.hideAsync();
     }
   }, [loaded]);
 
   if (!loaded) {
+    console.log("pas de fonts");
     return null;
   }
 

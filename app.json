@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#25292e"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -26,6 +26,16 @@
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
-    }
+    },
+    "plugin": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/RougeScript-Regular.ttf"
+          ]
+        }
+      ]
+    ]
   }
 }
