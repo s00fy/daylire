@@ -3,7 +3,9 @@ import { StyleSheet, Text, View, Image, Button, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CadavreList from './components/CadavreList';
+import HomeScreen from './components/Home';
 import Cadavre from './components/Cadavre';
+import CadavreDetails from './components/CadavreDetails';
 
 function DetailsScreen({ navigation }) {
   return (

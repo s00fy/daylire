@@ -1,5 +1,6 @@
 import { Text, View, Pressable, StyleSheet, Image, ImageBackground, ScrollView } from 'react-native';
 import Header from './Header';
+import CadavreList from './CadavreList';
 const image = {uri: 'https://ucarecdn.com/9514f9b1-3bf9-4b7c-b31d-9fb8cd6af8bf/'};
 
 export default function HomeScreen({ navigation }) {
