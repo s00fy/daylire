@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Text, View, Pressable, StyleSheet, SafeAreaView, FlatList, ImageBackground, Image } from 'react-native';
+import { Text, View, Pressable, StyleSheet, SafeAreaView, FlatList, ImageBackground, Image } from 'react-native';
 import { useFonts, Kurale_400Regular } from '@expo-google-fonts/kurale';
 import * as SplashScreen from 'expo-splash-screen';
 import Cadavre from './Cadavre';
@@ -19,10 +19,6 @@ const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, con
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.date_debut_cadavre}>Du {formatDate(date_debut_cadavre)} au {formatDate(date_fin_cadavre)}</Text>
         <Text style={styles.contribution}>{contrib}</Text>
-        <Button
-          title="Découvrir le cadavre exquis →"
-          onPress={() => navigation.navigate('Cadavre', {cadavre_id: {id} })}
-        />
         <Pressable style={styles.button}
           onPress={() =>
             navigation.navigate('Cadavre', {
