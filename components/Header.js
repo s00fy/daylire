@@ -33,6 +33,9 @@ const styles = StyleSheet.create({
     },
     headerTitle: {
       fontFamily: 'RougeScript_400Regular',
+      textShadowColor: 'black',
+      textShadowOffset: { width: 1, height: 1 },
+      textShadowRadius: 2,
       fontSize: 42,
     },
 })

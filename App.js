@@ -2,10 +2,9 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, Button, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { AsyncStorage } from 'react-native';
 import CadavreList from './components/CadavreList';
-import HomeScreen from './components/Home';
 import Cadavre from './components/Cadavre';
-import CadavreDetails from './components/CadavreDetails';
 
 function DetailsScreen({ navigation }) {
   return (
@@ -27,6 +26,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
+            headerShown: false,
           headerStyle: {
             backgroundColor: '#f4511e',
           },

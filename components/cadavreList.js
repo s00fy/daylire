@@ -1,13 +1,13 @@
-import { View, StyleSheet, FlatList, Text, SafeAreaView } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import CadavreDetails from './CadavreDetails';
 import Header from './Header';
 
 export default function CadavreList({ navigation }) {
     return (
-        <View style={styles.detailsScreenContainer} >
+        <ScrollView style={styles.detailsScreenContainer} >
             <Header />
             <CadavreDetails navigation={navigation} />
-        </View>
+        </ScrollView>
     );
 }
 const styles = StyleSheet.create({
