@@ -2,8 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, Button, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from './components/Header';
-import Cadavre from './components/CadavreDetails';
+import HomeScreen from './components/Home';
 import CadavreList from './components/cadavreList';
 
 function DetailsScreen({ navigation }) {

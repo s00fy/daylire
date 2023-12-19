@@ -1,55 +1,59 @@
-import { Text, View, Pressable, StyleSheet, SafeAreaView, FlatList, ImageBackground } from 'react-native';
+import React, { useState, useEffect, StyleSheet, ScrollView } from 'react';
 
 const image = {uri: 'https://ucarecdn.com/9514f9b1-3bf9-4b7c-b31d-9fb8cd6af8bf/'};
 
-const DATA = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'Titre du cadavre exquis',
-      author: 'bchaulet@mail.com',
-      contrib: 'dsuhfoizejifenjfeoijvlonvvisdoj,vpidsncfiesqj,dpoej,',
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Titre du cadavre exquis',
-      author: 'bchaulet@mail.com',
-      contrib: 'dsuhfoizejifenjfeoijvlonvvisdoj,vpidsncfiesqj,dpoej,',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Titre du cadavre exquis',
-      author: 'bchaulet@mail.com',
-      contrib: 'dsuhfoizejifenjfeoijvlonvvisdoj,vpidsncfiesqj,dpoej,',
-    },
-  ];
-  
-  const Item = ({ title, author, contrib }) => (
+const formatDate = (dateString) => {
+    const [year, month, day] = dateString.split('-');
+    return `${day}/${month}/${year}`;
+};
+
+const Item = ({ title, date_debut_cadavre, date_fin_cadavre, contrib }) => (
+    
     <View style={styles.item}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
         <Text style={styles.title}>{title}</Text>
-        <Text style={styles.author}>Par {author}</Text>
+        <Text style={styles.date_debut_cadavre}>Du {formatDate(date_debut_cadavre)} au {formatDate(date_fin_cadavre)}</Text>
         <Text style={styles.contribution}>{contrib}</Text>
-        <Pressable style={styles.button} onPress={() => navigation.navigate('CadavreDetails')}>
+        <Pressable style={styles.button} onPress={() => navigation.navigate('Cadavre', { cadavre_id: id })}>
             <Text style={styles.buttonText}>Découvrir le cadavre exquis →</Text>
         </Pressable>
       </ImageBackground>
     </View>
   );
+
 export default function CadavreDetails({ navigation }) {
+  const [data, setData] = useState([]);
+  
+  useEffect(() => {
+    fetch('https://jbienvenu.alwaysdata.net/loufok/api/cadavres')
+      .then((response) => response.json())
+      .then((responseData) => {
+          setData(responseData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  const renderItem = ({ item }) => (
+    <Item
+      title={item.titre_cadavre}
+      date_fin_cadavre={item.date_fin_cadavre}
+      date_debut_cadavre={item.date_debut_cadavre}
+      contrib={item.contribution}
+      navigation={navigation}
+    />
+  );
+
   return (
-    <View style={styles.cadavreHeader}>
+      <View style={styles.cadavreHeader}>
       <SafeAreaView style={styles.container}>
-                <FlatList
-                    data={DATA}
-                    renderItem={({item}) => 
-                    <Item
-                        title={item.title}
-                        author={item.author}
-                        contrib={item.contrib}
-                    />}
-                    keyExtractor={item => item.id}
-                />
-        </SafeAreaView>
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+        />
+      </SafeAreaView>
     </View>
     
   );
@@ -61,6 +65,8 @@ const styles = StyleSheet.create({
     color: '#1e1e1e',
   },
   button: {
+    padding: 15,
+    paddingLeft: 0,
   },
   buttonText: {
     fontSize: 16,
@@ -72,11 +78,6 @@ const styles = StyleSheet.create({
   cadavreHeader: {
     alignItems: 'start',
     justifyContent: 'start',
-    padding: 15,
-    paddingLeft: 0,
-    margin:25,
-    marginLeft:0,
-    
   },
   cadavreHeaderTitle: {
     fontSize: 28,
@@ -90,11 +91,13 @@ const styles = StyleSheet.create({
   },
   item: {
     backgroundColor: '#FFF3D6',
-    padding: 20,
+    padding: 15,
     paddingLeft: 20,
     marginVertical: 8,
     borderTopRightRadius:20,
     borderBottomRightRadius:20,
+    margin:25,
+    marginLeft:0,
   },
   header: {
     fontSize: 32,
@@ -102,24 +105,30 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
+    padding:10,
+    paddingLeft:0,
   },
-  author: {
+  date_debut_cadavre: {
     fontSize: 16,
-    paddingBottom:5,
+    paddingBottom: 15,
     fontStyle: 'italic',
-    color: '#333', // Change this color as needed
+    color: '#333',
   },
   contribution: {
     fontSize: 16,
-    color: '#666', // Change this color as needed
+    color: '#666',
+    padding: 15,
+    paddingBottom: 20,
+    paddingLeft: 0,
   },
   image: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
-    padding: 24, // Adjust as needed
-    borderRadius: 15,
-    marginLeft: -24, // Negative margin to compensate for border-radius
-    marginTop: -24, // Negative margin to compensate for border-radius
-    marginRight: -24, 
-    marginBottom: -24, 
+    opacity: 0.5,
+    padding: 24, 
+    borderTopRightRadius:20,
+    borderBottomRightRadius:20,
+    marginLeft: -20,
+    marginTop: -15,
+    marginRight: -14, 
+    marginBottom: -15, 
   }
 });
