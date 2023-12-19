@@ -25,7 +25,7 @@ const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, con
               cadavre_id: {id}, // Assuming item.id holds the cadavre_id
             })
           }>
-            <Text style={styles.buttonText}>Découvrir le cadavre exquis →</Text>
+            <Text style={styles.buttonText}>Lire le cadavre exquis →</Text>
         </Pressable>
       </ImageBackground>
     </View>
@@ -122,7 +122,6 @@ const styles = StyleSheet.create({
   date_debut_cadavre: {
     fontSize: 16,
     paddingBottom: 15,
-    fontStyle: 'italic',
     color: '#333',
     fontFamily: 'Kurale_400Regular',
   },

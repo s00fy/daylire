@@ -79,6 +79,7 @@ export default function Cadavre({navigation, route }) {
     //display cadavre infos
     const renderCadavre = () => {
         if (cadavreData) {
+            const contributionsLength = cadavreData.contributions.length;
             //formatting the 'joueurs' field
             const joueursList = cadavreData.joueurs;
             const lastItem = joueursList.pop(); // Remove and get the last item
@@ -89,7 +90,7 @@ export default function Cadavre({navigation, route }) {
                     <View style={styles.cadavreParams}>
                         <Text style={styles.CadavreAdmin}>Par {cadavreData.adr_admin}</Text>
                         <Text style={styles.CadavreDate}>Du {formatDate(cadavreData.date_debut_cadavre)} au {formatDate(cadavreData.date_fin_cadavre)}</Text>
-                        <Text style={styles.CadavreNbContributions}>Nombre de contributions : {cadavreData.nb_contributions}</Text>
+                        <Text style={styles.CadavreNbContributions}>Nombre de contributions : {contributionsLength} </Text>
                     </View>
                     <View>
                         {cadavreData.contributions.map((contribution, index) => (
@@ -105,7 +106,7 @@ export default function Cadavre({navigation, route }) {
         } else {
             return (
                 <View>
-                    <Text>Nous n'arrivons pas à charger le cadavre exquis, veuillez nous excusez de la gêne occasionnée.</Text>
+                    <Text>Loading...</Text>
                 </View>
             );
         }
