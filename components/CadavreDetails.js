@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Text, View, Pressable, StyleSheet, SafeAreaView, FlatList, ImageBackground, Image } from 'react-native';
+import Cadavre from './Cadavre';
 
 const image = {uri: 'https://ucarecdn.com/9514f9b1-3bf9-4b7c-b31d-9fb8cd6af8bf/'};
 

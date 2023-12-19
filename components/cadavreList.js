@@ -6,7 +6,7 @@ export default function CadavreList({ navigation }) {
     return (
         <View style={styles.detailsScreenContainer} >
             <Header />
-            <CadavreDetails />
+            <CadavreDetails navigation={navigation} />
         </View>
     );
 }

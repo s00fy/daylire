@@ -47,8 +47,7 @@ export default function App() {
             },
           }}
         name="Daylire" component={CadavreList} />
-        <Stack.Screen name="Details" component={DetailsScreen} />
-        <Stack.Screen name="Cadavre" component={Cadavre} />
+        <Stack.Screen name="Cadavre" component={Cadavre}></Stack.Screen>
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
