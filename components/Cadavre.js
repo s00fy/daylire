@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, ImageBackground, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ImageBackground, Image, Pressable } from 'react-native';
 import Header from './Header';
 import React, { useState, useEffect } from 'react';
 import { useFonts, Kurale_400Regular } from '@expo-google-fonts/kurale';
@@ -12,6 +12,9 @@ const formatDate = (dateString) => {
     return `${day}/${month}/${year}`;
 };
 
+const addLike = () => {
+
+};
 export default function Cadavre({navigation, route }) {
     const [cadavreData, setCadavreData] = useState(null);
     const { cadavre_id } = route.params;
@@ -75,10 +78,10 @@ export default function Cadavre({navigation, route }) {
         <ScrollView style={styles.CadavreContainer}>
             <View style={styles.CadavreHeader}>
                 <Header />
-                <Text style={styles.CadavreLike}>
+                <Pressable style={styles.CadavreLike} onPress={() => addLike()}>
                     <Text style={styles.CadavreLikeNumber} >{cadavreLike()}</Text>
                     <Image style={styles.CadavreLikeIcon} source={heartEmpty} resizeMode="contain" />
-                </Text>
+                </Pressable>
             </View>
             <ImageBackground source={image} resizeMode="cover" style={styles.image}>
                 {renderCadavre()}
@@ -102,14 +105,13 @@ const styles = StyleSheet.create({
         display:'flex',
         gap:15,
         flexDirection:'row',
-        width:70,
+        width:50,
         justifyContent:'space-around',
     },    
     CadavreLikeNumber: {
         color:'#1A98C0',
     },
     CadavreLikeIcon: {
-        paddingLeft:15,
     },
     CadavreContainer: {
 
