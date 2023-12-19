@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, Button, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CadavreList from './components/CadavreList';
+import Cadavre from './components/Cadavre';
 
 function DetailsScreen({ navigation }) {
   return (
@@ -45,6 +46,7 @@ export default function App() {
           }}
         name="Daylire" component={CadavreList} />
         <Stack.Screen name="Details" component={DetailsScreen} />
+        <Stack.Screen name="Cadavre" component={Cadavre} />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
