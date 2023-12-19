@@ -2,8 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, Button, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from './components/Home';
-import CadavreList from './components/cadavreList';
+import CadavreList from './components/CadavreList';
 
 function DetailsScreen({ navigation }) {
   return (
@@ -44,9 +43,8 @@ export default function App() {
               fontWeight: 'bold',
             },
           }}
-        name="Daylire" component={HomeScreen} />
+        name="Daylire" component={CadavreList} />
         <Stack.Screen name="Details" component={DetailsScreen} />
-        <Stack.Screen name="CadavreList" component={CadavreList} />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>

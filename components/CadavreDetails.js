@@ -1,4 +1,5 @@
-import React, { useState, useEffect, StyleSheet, ScrollView } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Text, View, Pressable, StyleSheet, SafeAreaView, FlatList, ImageBackground, Image } from 'react-native';
 
 const image = {uri: 'https://ucarecdn.com/9514f9b1-3bf9-4b7c-b31d-9fb8cd6af8bf/'};
 
@@ -14,7 +15,7 @@ const Item = ({ title, date_debut_cadavre, date_fin_cadavre, contrib }) => (
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.date_debut_cadavre}>Du {formatDate(date_debut_cadavre)} au {formatDate(date_fin_cadavre)}</Text>
         <Text style={styles.contribution}>{contrib}</Text>
-        <Pressable style={styles.button} onPress={() => navigation.navigate('Cadavre', { cadavre_id: id })}>
+        <Pressable style={styles.button} onPress={() => navigation.navigate('Cadavre')}>
             <Text style={styles.buttonText}>Découvrir le cadavre exquis →</Text>
         </Pressable>
       </ImageBackground>
@@ -75,29 +76,17 @@ const styles = StyleSheet.create({
     letterSpacing: 0.25,
     color:'#1A98C0',
   },
-  cadavreHeader: {
-    alignItems: 'start',
-    justifyContent: 'start',
-  },
-  cadavreHeaderTitle: {
-    fontSize: 28,
-  },
-  cadavreHeaderSubtitle: {
-    fontSize: 16,
-    paddingBottom:5,
-  },
-  cadavreHeaderContrib: {
-
-  },
   item: {
     backgroundColor: '#FFF3D6',
     padding: 15,
     paddingLeft: 20,
-    marginVertical: 8,
     borderTopRightRadius:20,
     borderBottomRightRadius:20,
     margin:25,
     marginLeft:0,
+  },
+  cadavreHeader:{
+    marginBottom: 200,
   },
   header: {
     fontSize: 32,
