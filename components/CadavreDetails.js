@@ -2,20 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, Pressable, StyleSheet, SafeAreaView, FlatList, ImageBackground, Image } from 'react-native';
 import { useFonts, Kurale_400Regular } from '@expo-google-fonts/kurale';
 import * as SplashScreen from 'expo-splash-screen';
-import Cadavre from './Cadavre';
+import heartEmpty from '../assets/images/heart_empty.png';
 
-
+//const of bg img
 const image = {uri: 'https://ucarecdn.com/9514f9b1-3bf9-4b7c-b31d-9fb8cd6af8bf/'};
 
+//change date format
 const formatDate = (dateString) => {
     const [year, month, day] = dateString.split('-');
     return `${day}/${month}/${year}`;
 };
 
-const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, contrib }) => (
+//Display item infos 
+const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, contrib, nb_jaime }) => (
 
     <View style={styles.item}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+        <View style={styles.likeContainer}>
+          <Text style={styles.like}>{nb_jaime}</Text>
+          <Image style={styles.likeIcon} source={heartEmpty} resizeMode="contain" />
+        </View>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.date_debut_cadavre}>Du {formatDate(date_debut_cadavre)} au {formatDate(date_fin_cadavre)}</Text>
         <Text style={styles.contribution}>{contrib}</Text>
@@ -31,9 +37,31 @@ const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, con
     </View>
   );
 
-  export default function CadavreDetails({ navigation }) {
-    const [data, setData] = useState([]);
-  
+    //component
+    export default function CadavreDetails({ navigation }) {
+
+      const [data, setData] = useState([]);
+      const [filteredData, setFilteredData] = useState([]);
+      const [filter, setFilter] = useState('likes');
+      const [likeLloaded, setLikeLoaded] = useState(false); // Track whether data has been loaded
+        
+      // Function to filter cadavres based on criterias
+      const handleFilter = (criteria) => {
+        setFilter(criteria);
+        let sortedData = [...data];
+
+    // likes, date and alphabet
+    if (criteria === 'likes') {
+      sortedData.sort((a, b) => b.nb_jaime - a.nb_jaime); // Sort by likes (most to least)
+    } else if (criteria === 'date') {
+      sortedData.sort((a, b) => new Date(b.date_fin_cadavre) - new Date(a.date_fin_cadavre)); // Sort by date (most recent to oldest)
+    } else if (criteria === 'alphabetical') {
+      sortedData.sort((a, b) => a.titre_cadavre.localeCompare(b.titre_cadavre)); // Sort alphabetically
+    }
+
+    setFilteredData(sortedData);
+  };
+
     const [loaded] = useFonts({
       Kurale_400Regular,
     });
@@ -50,16 +78,19 @@ const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, con
         .then((response) => response.json())
         .then((responseData) => {
           setData(responseData);
+          setLikeLoaded(true); // Set loaded to true after fetching data
         })
         .catch((error) => {
           console.error(error);
         });
     }, [loaded]);
 
+  //render Item thx to const Item
   const renderItem = ({ item }) => (
     <Item
       id={item.id_cadavre}
       title={item.titre_cadavre}
+      nb_jaime={item.nb_jaime}
       date_fin_cadavre={item.date_fin_cadavre}
       date_debut_cadavre={item.date_debut_cadavre}
       contrib={item.contribution}
@@ -67,16 +98,42 @@ const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, con
     />
   );
 
+  //comp return
   return (
-      <View style={styles.cadavreHeader} >
-      <SafeAreaView style={styles.container}>
-        <FlatList
-          data={data}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          />
-      </SafeAreaView>
+    <View style={styles.cadavreHeader}>
+      {/* Filter bar */}
+      <View style={styles.filterBar}>
+        <Pressable
+          style={[styles.filterButton, filter === 'likes' && styles.activeFilter]}
+          onPress={() => handleFilter('likes')}>
+          <Text style={styles.filterButtonText}>Likes</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.filterButton, filter === 'date' && styles.activeFilter]}
+          onPress={() => handleFilter('date')}>
+          <Text style={styles.filterButtonText}>Date</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.filterButton, filter === 'alphabetical' && styles.activeFilter]}
+          onPress={() => handleFilter('alphabetical')}>
+          <Text style={styles.filterButtonText}>Alphabetical</Text>
+        </Pressable>
+      </View>
+        {loaded ? (
+          <SafeAreaView style={styles.container}>
+            <FlatList
+              data={filteredData}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+            />
+          </SafeAreaView>
+        ) : (
+          <View style={styles.loadingContainer}>
+            <Text>Loading...</Text>
+          </View>
+        )}
     </View>
+
   );
 }
 
@@ -93,7 +150,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Kurale_400Regular',
     fontSize: 16,
     lineHeight: 21,
-    fontWeight: 'bold',
     letterSpacing: 0.25,
     color:'#1A98C0',
   },
@@ -142,5 +198,35 @@ const styles = StyleSheet.create({
     marginTop: -15,
     marginRight: -14, 
     marginBottom: -15, 
-  }
+  },
+  filterBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 10,
+  },
+  filterButton: {
+    padding: 8,
+    borderRadius: 5,
+  },
+  activeFilter: {
+    borderColor: '#1A98C0',
+    borderWidth: 2,
+
+  },
+  filterButtonText: {
+    color: '#1A98C0',
+    fontFamily: 'Kurale_400Regular',
+  },
+  likeContainer: {
+    flexDirection:'row',
+    justifyContent:'flex-end',
+    alignItems:'center',
+    gap: 5,
+  },
+  like: {
+    color: '#1A98C0',
+  }, 
+  likeIcon: {
+
+  }, 
 });

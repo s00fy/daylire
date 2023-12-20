@@ -12,6 +12,7 @@
     "@expo-google-fonts/kurale": "^0.2.3",
     "@expo-google-fonts/rouge-script": "^0.2.3",
     "@expo/webpack-config": "^19.0.0",
+    "@react-native-picker/picker": "^2.6.1",
     "@react-navigation/native-stack": "^6.9.17",
     "expo": "~49.0.15",
     "expo-constants": "~14.4.2",
