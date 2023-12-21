@@ -1,23 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, Button, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { AsyncStorage } from 'react-native';
 
 import CadavreList from './components/CadavreList';
 import Cadavre from './components/Cadavre';
-
-function DetailsScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Details Screen</Text>
-      <Button
-        title="Découvrir le cadavre exquis"
-        onPress={() => navigation.push('Details')}
-      />
-    </View>
-  );
-}
 
 const Stack = createNativeStackNavigator();
 

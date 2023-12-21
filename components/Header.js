@@ -30,10 +30,11 @@ const styles = StyleSheet.create({
     headerContainer: {
         padding: 12,
         marginTop: 50,
-    },
-    headerTitle: {
+      },
+      headerTitle: {
+      color:'#fff',
       fontFamily: 'RougeScript_400Regular',
-      textShadowColor: 'black',
+      textShadowColor: '#fff',
       textShadowOffset: { width: 1, height: 1 },
       textShadowRadius: 2,
       fontSize: 62,

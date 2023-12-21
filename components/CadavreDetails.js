@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, Pressable, StyleSheet, SafeAreaView, FlatList, ImageBackground, Image } from 'react-native';
+import { Text, View, Pressable, StyleSheet, SafeAreaView, FlatList, Image } from 'react-native';
 import { useFonts, Kurale_400Regular } from '@expo-google-fonts/kurale';
 import * as SplashScreen from 'expo-splash-screen';
 import heartEmpty from '../assets/images/heart_empty.png';
-
-//const of bg img
-const image = {uri: 'https://ucarecdn.com/9514f9b1-3bf9-4b7c-b31d-9fb8cd6af8bf/'};
 
 //change date format
 const formatDate = (dateString) => {
@@ -15,9 +12,7 @@ const formatDate = (dateString) => {
 
 //Display item infos 
 const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, contrib, nb_jaime }) => (
-
     <View style={styles.item}>
-      <ImageBackground source={image} resizeMode="cover" style={styles.image}>
         <View style={styles.likeContainer}>
           <Text style={styles.like}>{nb_jaime}</Text>
           <Image style={styles.likeIcon} source={heartEmpty} resizeMode="contain" />
@@ -33,7 +28,6 @@ const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, con
           }>
             <Text style={styles.buttonText}>Lire le cadavre exquis →</Text>
         </Pressable>
-      </ImageBackground>
     </View>
   );
 
@@ -43,7 +37,7 @@ const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, con
       const [data, setData] = useState([]);
       const [filteredData, setFilteredData] = useState([]);
       const [filter, setFilter] = useState('likes');
-      const [likeLloaded, setLikeLoaded] = useState(false); // Track whether data has been loaded
+      const [likeLoaded, setLikeLoaded] = useState(false); // Track whether data has been loaded
         
       // Function to filter cadavres based on criterias
       const handleFilter = (criteria) => {
@@ -67,27 +61,38 @@ const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, con
     });
   
     useEffect(() => {
-      async function hideSplashScreen() {
-        if (loaded) {
-          await SplashScreen.hideAsync();
+      async function fetchData() {
+        try {
+          const response = await fetch('https://jbienvenu.alwaysdata.net/loufok/api/cadavres');
+          const responseData = await response.json();
+    
+          // Set data and mark as loaded
+          setData(responseData);
+          setLikeLoaded(true);
+    
+          // Filter the data based on the default filter ('likes' in this case)
+          let sortedData = [...responseData];
+          if (filter === 'likes') {
+            sortedData.sort((a, b) => b.nb_jaime - a.nb_jaime);
+          } else if (filter === 'date') {
+            sortedData.sort((a, b) => new Date(b.date_fin_cadavre) - new Date(a.date_fin_cadavre));
+          } else if (filter === 'alphabetical') {
+            sortedData.sort((a, b) => a.titre_cadavre.localeCompare(b.titre_cadavre));
+          }
+    
+          setFilteredData(sortedData);
+        } catch (error) {
+          console.error(error);
         }
       }
-      hideSplashScreen();
-  
-      fetch('https://jbienvenu.alwaysdata.net/loufok/api/cadavres')
-        .then((response) => response.json())
-        .then((responseData) => {
-          setData(responseData);
-          setLikeLoaded(true); // Set loaded to true after fetching data
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }, [loaded]);
+    
+      fetchData();
+    }, [filter]);
 
   //render Item thx to const Item
   const renderItem = ({ item }) => (
     <Item
+      key={item.id_cadavre}
       id={item.id_cadavre}
       title={item.titre_cadavre}
       nb_jaime={item.nb_jaime}
@@ -100,7 +105,7 @@ const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, con
 
   //comp return
   return (
-    <View style={styles.cadavreHeader}>
+    <View style={styles.cadavreComponent}>
       {/* Filter bar */}
       <View style={styles.filterBar}>
         <Pressable
@@ -124,7 +129,7 @@ const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, con
             <FlatList
               data={filteredData}
               renderItem={renderItem}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item) => item.id_cadavre}
             />
           </SafeAreaView>
         ) : (
@@ -140,7 +145,7 @@ const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, con
 const styles = StyleSheet.create({
   buttonSecond: {
     backgroundColor: 'none',
-    color: '#1e1e1e',
+    color: '#16A2CC',
   },
   button: {
     padding: 15,
@@ -151,10 +156,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 21,
     letterSpacing: 0.25,
-    color:'#1A98C0',
+    color:'#16A2CC',
   },
   item: {
-    backgroundColor: '#FFF3D6',
+    backgroundColor: '#1E1E1E',
     padding: 15,
     paddingLeft: 20,
     borderTopRightRadius:20,
@@ -162,28 +167,30 @@ const styles = StyleSheet.create({
     margin:25,
     marginLeft:0,
   },
-  cadavreHeader:{
-    marginBottom: 200,
+  cadavreComponent:{
+    marginBottom: 200,    
+    backgroundColor:'red',
   },
   header: {
     fontSize: 32,
-    backgroundColor: '#fff',
+    backgroundColor: '#EBEBEB',
   },
   title: {
     fontSize: 24,
     padding:10,
     paddingLeft:0,
+    color: '#EBEBEB',
     fontFamily: 'Kurale_400Regular',
   },
   date_debut_cadavre: {
     fontSize: 16,
     paddingBottom: 15,
-    color: '#333',
+    color: '#A3B8B5',
     fontFamily: 'Kurale_400Regular',
   },
   contribution: {
     fontSize: 16,
-    color: '#666',
+    color: '#EBEBEB',
     padding: 15,
     fontFamily: 'Kurale_400Regular',
     paddingBottom: 20,
@@ -206,17 +213,15 @@ const styles = StyleSheet.create({
   },
   filterButton: {
     padding: 8,
-    borderRadius: 5,
-  },
-  activeFilter: {
-    borderColor: '#1A98C0',
-    borderWidth: 2,
-
   },
   filterButtonText: {
-    color: '#1A98C0',
+    color: '#16A2CC',
     fontFamily: 'Kurale_400Regular',
   },
+  activeFilter: {
+    borderBottomWidth: 2,
+    borderBottomColor: '#16A2CC',
+},
   likeContainer: {
     flexDirection:'row',
     justifyContent:'flex-end',
@@ -224,7 +229,7 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   like: {
-    color: '#1A98C0',
+    color: '#16A2CC',
   }, 
   likeIcon: {
 

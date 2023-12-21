@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, ImageBackground, Image, Pressable } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, Pressable } from 'react-native';
 import Header from './Header';
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -6,9 +6,6 @@ import { useFonts, Kurale_400Regular } from '@expo-google-fonts/kurale';
 import * as SplashScreen from 'expo-splash-screen';
 import heartEmpty from '../assets/images/heart_empty.png';
 import heartFull from '../assets/images/heart_full.png';
-
-//background img url
-const image = {uri: 'https://ucarecdn.com/9514f9b1-3bf9-4b7c-b31d-9fb8cd6af8bf/'};
 
 //change date format from YYYY-MM-DD to DD/MM/YYYY
 const formatDate = (dateString) => {
@@ -155,9 +152,7 @@ export default function Cadavre({navigation, route }) {
                     <Image style={styles.CadavreLikeIcon} source={ isLiked ? heartFull : heartEmpty} resizeMode="contain" />
                 </Pressable>
             </View>
-            <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-                {renderCadavre()}
-            </ImageBackground>
+            {renderCadavre()}
         </ScrollView>
     )
 }
@@ -187,22 +182,22 @@ const styles = StyleSheet.create({
     CadavreBackText: {
         fontFamily: 'Kurale_400Regular',
         fontSize: 20,
-        textShadowColor:'#1A98C0',
+        textShadowColor:'#16A2CC',
         textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 2,
-        color:'#1A98C0',
+        color:'#16A2CC',
     },
     CadavreLikeNumber: {
         fontSize:18,
-        textShadowColor:'#1A98C0',
+        textShadowColor:'#16A2CC',
         textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 2,
-        color:'#1A98C0',
+        color:'#16A2CC',
     },
     CadavreLikeIcon: {
     },
     CadavreContainer: {
-
+        backgroundColor:'black',
     },
     cadavreParams: {
         fontFamily: 'Kurale_400Regular',
@@ -210,6 +205,7 @@ const styles = StyleSheet.create({
     },
     CadavreTitle: {
         padding:16,
+        color: '#EBEBEB',
         paddingLeft:0,
         paddingBottom:10,
         fontSize:32,
@@ -217,33 +213,34 @@ const styles = StyleSheet.create({
 
     },
     CadavreAdmin: {
+        color: '#A3B8B5',
         fontSize:14,
-        color:'#1A98C0',
         fontFamily: 'Kurale_400Regular',
 
     },
     CadavreDate: {
-        color:'#1A98C0',
+        color: '#A3B8B5',
         fontFamily: 'Kurale_400Regular',
 
     },
     CadavreNbContributions: {
-        color:'#1A98C0',
+        color:'#16A2CC',
         fontFamily: 'Kurale_400Regular',
         paddingBottom:20,
     },
     CadavreContribs: {
         fontSize:18,
+        color:'#EBEBEB',
         fontFamily: 'Kurale_400Regular',
-        marginBottom: 15,
+
     },
     CadavreAuthors: {
         paddingVertical: 25,
-        color: '#1A98C0',
+        color: '#16A2CC',
         fontFamily: 'Kurale_400Regular',
     },
     cadavreDisplay: {
-        backgroundColor: '#FFF3D6',
+        backgroundColor: '#1E1E1E',
         padding: 15,
         paddingLeft: 20,
         borderTopRightRadius:20,

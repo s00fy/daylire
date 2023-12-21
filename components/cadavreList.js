@@ -1,17 +1,19 @@
-import { ScrollView, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import CadavreDetails from './CadavreDetails';
 import Header from './Header';
 
 export default function CadavreList({ navigation }) {
     return (
-        <ScrollView style={styles.detailsScreenContainer} >
+        <View style={styles.detailsScreenContainer} >
             <Header />
             <CadavreDetails navigation={navigation} />
-        </ScrollView>
+        </View>
     );
 }
 const styles = StyleSheet.create({
     detailsScreenContainer: {
        flex:1,
+       backgroundColor:'black',
+       marginBottom:15,
     }
 })
