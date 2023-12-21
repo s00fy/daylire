@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, Button, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AsyncStorage } from 'react-native';
+
 import CadavreList from './components/CadavreList';
 import Cadavre from './components/Cadavre';
 

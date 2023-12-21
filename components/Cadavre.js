@@ -1,9 +1,11 @@
 import { View, Text, StyleSheet, ScrollView, ImageBackground, Image, Pressable } from 'react-native';
 import Header from './Header';
 import React, { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFonts, Kurale_400Regular } from '@expo-google-fonts/kurale';
 import * as SplashScreen from 'expo-splash-screen';
 import heartEmpty from '../assets/images/heart_empty.png';
+import heartFull from '../assets/images/heart_full.png';
 
 //background img url
 const image = {uri: 'https://ucarecdn.com/9514f9b1-3bf9-4b7c-b31d-9fb8cd6af8bf/'};
@@ -18,31 +20,53 @@ const formatDate = (dateString) => {
 export default function Cadavre({navigation, route }) {
 
     //function to add a like with the API, it also needs to update the localstorage
-    const addLike = async () => {
-        if (cadavreData) {
-            try {
-                const response = await fetch(`https://jbienvenu.alwaysdata.net/loufok/api/cadavre/like`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ cadavre_id: cadavreData.id }), // Assuming 'id' is the identifier of your cadavre
-                });
+    const addLike = async () => {;
 
-                if (response.ok) {
-                    // Assuming the API returns updated cadavre data after adding a like
-                    const updatedCadavre = await response.json();
-                    setCadavreData(updatedCadavre);
-                } else {
-                    console.error('Failed to add like');
-                    // Handle error scenarios here
+        cadavreAlreadyLiked = await AsyncStorage.getItem(cadavre_id.id.toString());
+
+        if(!cadavreAlreadyLiked) {
+            if (cadavreData) {
+                try {
+                    const response = await fetch(`https://jbienvenu.alwaysdata.net/loufok/api/cadavre/like`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ idCadavre: cadavreData.id_cadavre }), // Assuming 'id' is the identifier of your cadavre
+                    });
+
+                    if (response.ok) {
+                        // Assuming the API returns updated cadavre data after adding a like
+
+                        AsyncStorage.setItem(
+                            cadavre_id.id.toString(),
+                            'true',
+                        );
+
+                        cadavreData.nb_jaime++;
+                        cadavreLike();
+
+                        setIsLiked(true);
+                        console.log(isLiked);
+
+                        // setCadavreData(updatedCadavre);
+                    } else {
+                        console.error('Failed to add like');
+                        // Handle error scenarios here
+                    }
+
+                } catch (error) {
+                    console.error('Error adding like:', error);
+                    // Handle network errors or exceptions here
                 }
-            } catch (error) {
-                console.error('Error adding like:', error);
-                // Handle network errors or exceptions here
             }
+            setIsLiked(true);
+            console.log(isLiked);
         }
+
     };
+
+    
 
     //const 
     const [cadavreData, setCadavreData] = useState(null);
@@ -50,7 +74,10 @@ export default function Cadavre({navigation, route }) {
     const [loaded] = useFonts({
         Kurale_400Regular,
       });
-    
+
+    const [isLiked, setIsLiked] = useState(false);
+
+
       //fetch and get the font
       useEffect(() => {
         async function hideSplashScreen() {
@@ -75,7 +102,7 @@ export default function Cadavre({navigation, route }) {
             return cadavreData.nb_jaime;
         }
     }
-
+    
     //display cadavre infos
     const renderCadavre = () => {
         if (cadavreData) {
@@ -123,9 +150,9 @@ export default function Cadavre({navigation, route }) {
                     }>
                     <Text style={styles.CadavreBackText}> ← Retour </Text>
                 </Pressable>
-                <Pressable style={styles.CadavreLike} onPress={() => addLike()}>
+                <Pressable style={styles.CadavreLike} onPress={() => addLike()} disabled={isLiked}>
                     <Text style={styles.CadavreLikeNumber} >{cadavreLike()}</Text>
-                    <Image style={styles.CadavreLikeIcon} source={heartEmpty} resizeMode="contain" />
+                    <Image style={styles.CadavreLikeIcon} source={ isLiked ? heartFull : heartEmpty} resizeMode="contain" />
                 </Pressable>
             </View>
             <ImageBackground source={image} resizeMode="cover" style={styles.image}>
@@ -208,7 +235,7 @@ const styles = StyleSheet.create({
     CadavreContribs: {
         fontSize:18,
         fontFamily: 'Kurale_400Regular',
-
+        marginBottom: 15,
     },
     CadavreAuthors: {
         paddingVertical: 25,
