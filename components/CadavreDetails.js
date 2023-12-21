@@ -3,6 +3,36 @@ import { Text, View, Pressable, StyleSheet, SafeAreaView, FlatList, Image } from
 import { useFonts, Kurale_400Regular } from '@expo-google-fonts/kurale';
 import * as SplashScreen from 'expo-splash-screen';
 import heartEmpty from '../assets/images/heart_empty.png';
+import * as Font from 'expo-font';
+
+// Inside your component
+const loadFonts = async () => {
+  await Font.loadAsync({
+    Kurale_400Regular: require('@expo-google-fonts/kurale'),
+    // Add other fonts if needed
+  });
+};
+// Function to log AsyncStorage data
+const logAsyncStorageData = async () => {
+  try {
+    // Replace 'your_key' with the key you want to retrieve data for
+    const data = await AsyncStorage.getItem('your_key');
+
+    if (data !== null) {
+      console.log('AsyncStorage Data:', data);
+      // If the data exists, it will be logged
+    } else {
+      console.log('No data found in AsyncStorage');
+    }
+  } catch (error) {
+    console.error('Error retrieving data from AsyncStorage:', error);
+    // Handle errors while retrieving data
+  }
+};
+
+// Call the function to log AsyncStorage data
+logAsyncStorageData();
+
 
 //change date format
 const formatDate = (dateString) => {
@@ -61,6 +91,7 @@ const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, con
     });
   
     useEffect(() => {
+      loadFonts();
       async function fetchData() {
         try {
           const response = await fetch('https://jbienvenu.alwaysdata.net/loufok/api/cadavres');
@@ -169,7 +200,6 @@ const styles = StyleSheet.create({
   },
   cadavreComponent:{
     marginBottom: 200,    
-    backgroundColor:'red',
   },
   header: {
     fontSize: 32,

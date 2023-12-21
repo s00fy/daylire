@@ -6,6 +6,15 @@ import { useFonts, Kurale_400Regular } from '@expo-google-fonts/kurale';
 import * as SplashScreen from 'expo-splash-screen';
 import heartEmpty from '../assets/images/heart_empty.png';
 import heartFull from '../assets/images/heart_full.png';
+import * as Font from 'expo-font';
+
+// Inside your component
+const loadFonts = async () => {
+  await Font.loadAsync({
+    Kurale_400Regular: require('@expo-google-fonts/kurale'),
+    // Add other fonts if needed
+  });
+};
 
 //change date format from YYYY-MM-DD to DD/MM/YYYY
 const formatDate = (dateString) => {
@@ -24,6 +33,7 @@ export default function Cadavre({navigation, route }) {
         if(!cadavreAlreadyLiked) {
             if (cadavreData) {
                 try {
+                    loadFonts();
                     const response = await fetch(`https://jbienvenu.alwaysdata.net/loufok/api/cadavre/like`, {
                         method: 'POST',
                         headers: {
@@ -103,11 +113,12 @@ export default function Cadavre({navigation, route }) {
     //display cadavre infos
     const renderCadavre = () => {
         if (cadavreData) {
+            //get the number of contributions
             const contributionsLength = cadavreData.contributions.length;
             //formatting the 'joueurs' field
             const joueursList = cadavreData.joueurs;
             const lastItem = joueursList.pop(); // Remove and get the last item
-            const formattedJoueurs = joueursList.join(", ") + (joueursList.length > 0 ? ` et ${lastItem}` : lastItem);
+            const formattedPlayers = joueursList.join(", ") + (joueursList.length > 0 ? ` et ${lastItem}` : lastItem);
             return (
                 <View style={styles.cadavreDisplay}>
                     <Text style={styles.CadavreTitle}>{cadavreData.titre_cadavre}</Text>
@@ -123,8 +134,7 @@ export default function Cadavre({navigation, route }) {
                             </Text>
                         ))}
                     </View>
-                    <Text style={styles.CadavreAuthors}> Merci aux auteurs : {formattedJoueurs}</Text>
-                    
+                    <Text style={styles.CadavreAuthors}> Merci aux auteurs : {formattedPlayers}</Text>
                 </View>
             );
         } else {
