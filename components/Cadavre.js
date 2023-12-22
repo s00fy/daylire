@@ -5,47 +5,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SplashScreen from 'expo-splash-screen';
 import heartEmpty from '../assets/images/heart_empty.png';
 import heartFull from '../assets/images/heart_full.png';
-//import { useFonts, Kurale_400Regular } from '@expo-google-fonts/kurale';
 import * as Font from 'expo-font';
-
-// Inside your component
-const loadFonts = async () => {
-  await Font.loadAsync({
-    Kurale_400Regular: require('@expo-google-fonts/kurale')
-  });
-};
-
-// Function to log AsyncStorage data
-const logAsyncStorageData = async () => {
-    try {
-      // Replace 'your_key' with the key you want to retrieve data for
-      const data = await AsyncStorage.getItem('100');
-  
-      if (data !== null) {
-        console.log('AsyncStorage Data:', data);
-        // If the data exists, it will be logged
-      } else {
-        console.log('No data found in AsyncStorage');
-      }
-    } catch (error) {
-      console.error('Error retrieving data from AsyncStorage:', error);
-      // Handle errors while retrieving data
-    }
-  };
-  
-  // Call the function to log AsyncStorage data
-  logAsyncStorageData();
-  
-
-//change date format from YYYY-MM-DD to DD/MM/YYYY
-const formatDate = (dateString) => {
-    const [year, month, day] = dateString.split('-');
-    return `${day}/${month}/${year}`;
-};
 
 //component
 export default function Cadavre({navigation, route }) {
-
+    
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        Kurale_400Regular: require('@expo-google-fonts/kurale')
+      });
+    };
+    
+    //change date format from YYYY-MM-DD to DD/MM/YYYY
+    const formatDate = (dateString) => {
+        const [year, month, day] = dateString.split('-');
+        return `${day}/${month}/${year}`;
+    };
+    
     //function to add a like with the API, it also needs to update the localstorage
     const addLike = async () => {;
 
@@ -96,14 +72,13 @@ export default function Cadavre({navigation, route }) {
     //const 
     const [cadavreData, setCadavreData] = useState(null);
     const { cadavre_id } = route.params;
-
     const [isLiked, setIsLiked] = useState(false);
 
 
-      //fetch and get the font
+      //fetch and ensure font
       useEffect(() => {
         async function hideSplashScreen() {
-          if (loaded) {
+          if (loadFonts) {
             await SplashScreen.hideAsync();
           }
         }
@@ -117,8 +92,6 @@ export default function Cadavre({navigation, route }) {
                 console.error(error);
             });
     }, [cadavre_id, loadFonts]);
-
-    console.log(AsyncStorage.getItem('loadFonts'));
 
     //return the number of likes
     const cadavreLike= () =>{

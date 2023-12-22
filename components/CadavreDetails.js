@@ -1,41 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, Pressable, StyleSheet, SafeAreaView, FlatList, Image } from 'react-native';
-import { useFonts, Kurale_400Regular } from '@expo-google-fonts/kurale';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as SplashScreen from 'expo-splash-screen';
 import heartEmpty from '../assets/images/heart_empty.png';
-import * as Font from 'expo-font';
-
-// Inside your component
-const loadFonts = async () => {
-  await Font.loadAsync({
-    Kurale_400Regular: require('@expo-google-fonts/kurale')
-  });
-};
-
-// Function to log AsyncStorage data
-const logAsyncStorageData = async () => {
-    try {
-      // Replace 'your_key' with the key you want to retrieve data for
-      console.log(AsyncStorage.getItem('isLiked'));
-      console.log(AsyncStorage.getItem('addLike'));
-      console.log(AsyncStorage.getItem('setIsLiked'));
-      console.log(AsyncStorage.getItem('IsLiked'));
-  
-      if (data !== null) {
-        console.log('AsyncStorage Data:', data);
-        // If the data exists, it will be logged
-      } else {
-        console.log('No data found in AsyncStorage');
-      }
-    } catch (error) {
-      console.error('Error retrieving data from AsyncStorage:', error);
-      // Handle errors while retrieving data
-    }
-  };
-  
-  // Call the function to log AsyncStorage data
-  logAsyncStorageData();
+import FilterBar from './FilterBar';
 
 //change date format
 const formatDate = (dateString) => {
@@ -55,23 +21,19 @@ const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, con
         <Text style={styles.contribution}>{contrib}</Text>
         <Pressable style={styles.button}
           onPress={() =>
-            navigation.navigate('Cadavre', {
-              cadavre_id: {id}, // Assuming item.id holds the cadavre_id
-            })
+            navigation.navigate('Cadavre', {cadavre_id: {id}})
           }>
             <Text style={styles.buttonText}>Lire le cadavre exquis →</Text>
         </Pressable>
     </View>
   );
 
-    //component
-    export default function CadavreDetails({ navigation }) {
+  export default function CadavreDetails({ navigation }) {
 
       const [data, setData] = useState([]);
-      const [filteredData, setFilteredData] = useState([]);
+      const [filteredData, setFilteredData] = useState([]); //data ordered by likes, dates, alphabet
       const [filter, setFilter] = useState('likes');
-      const [likeLoaded, setLikeLoaded] = useState(false); // Track whether data has been loaded
-        
+      const [stillLoading, setStillLoading] = useState(true);; // Track whether data has been loaded
       // Function to filter cadavres based on criterias
       const handleFilter = (criteria) => {
         setFilter(criteria);
@@ -79,18 +41,15 @@ const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, con
 
     // likes, date and alphabet
     if (criteria === 'likes') {
-      sortedData.sort((a, b) => b.nb_jaime - a.nb_jaime); // Sort by likes (most to least)
+      sortedData.sort((a, b) => b.nb_jaime - a.nb_jaime);  
     } else if (criteria === 'date') {
-      sortedData.sort((a, b) => new Date(b.date_fin_cadavre) - new Date(a.date_fin_cadavre)); // Sort by date (most recent to oldest)
+      sortedData.sort((a, b) => new Date(b.date_fin_cadavre) - new Date(a.date_fin_cadavre));
     } else if (criteria === 'alphabetical') {
-      sortedData.sort((a, b) => a.titre_cadavre.localeCompare(b.titre_cadavre)); // Sort alphabetically
+      sortedData.sort((a, b) => a.titre_cadavre.localeCompare(b.titre_cadavre)); 
     }
 
     setFilteredData(sortedData);
   };
-  const [loaded] = useFonts({
-    Kurale_400Regular,
-  });
     useEffect(() => {
       async function fetchData() {
         try {
@@ -99,9 +58,9 @@ const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, con
     
           // Set data and mark as loaded
           setData(responseData);
-          setLikeLoaded(true);
+          setStillLoading(false);
     
-          // Filter the data based on the default filter ('likes' in this case)
+          // Filter cadavres
           let sortedData = [...responseData];
           if (filter === 'likes') {
             sortedData.sort((a, b) => b.nb_jaime - a.nb_jaime);
@@ -118,7 +77,7 @@ const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, con
       }
     
       fetchData();
-    }, [filter, loadFonts]);
+    }, [filter]);
 
   //render Item thx to const Item
   const renderItem = ({ item }) => (
@@ -134,42 +93,21 @@ const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, con
     />
   );
 
-  //comp return
   return (
     <View style={styles.cadavreComponent}>
-      {/* Filter bar */}
-      <View style={styles.filterBar}>
-        <Pressable
-          style={[styles.filterButton, filter === 'likes' && styles.activeFilter]}
-          onPress={() => handleFilter('likes')}>
-          <Text style={styles.filterButtonText}>Likes</Text>
-        </Pressable>
-        <Pressable
-          style={[styles.filterButton, filter === 'date' && styles.activeFilter]}
-          onPress={() => handleFilter('date')}>
-          <Text style={styles.filterButtonText}>Date</Text>
-        </Pressable>
-        <Pressable
-          style={[styles.filterButton, filter === 'alphabetical' && styles.activeFilter]}
-          onPress={() => handleFilter('alphabetical')}>
-          <Text style={styles.filterButtonText}>Alphabetical</Text>
-        </Pressable>
-      </View>
-        {loaded ? (
-          <SafeAreaView style={styles.container}>
-            <FlatList
-              data={filteredData}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id_cadavre}
-            />
-          </SafeAreaView>
+      <FilterBar handleFilter={handleFilter} activeFilter={filter} />
+      <SafeAreaView style={styles.container}>
+        {stillLoading ? (
+            <Text>Loading ...</Text>
         ) : (
-          <View style={styles.loadingContainer}>
-            <Text>Loading...</Text>
-          </View>
+          <FlatList
+            data={filteredData}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id_cadavre}
+          />
         )}
+      </SafeAreaView>
     </View>
-
   );
 }
 
@@ -197,6 +135,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius:20,
     margin:25,
     marginLeft:0,
+    paddingBottom:15,
   },
   cadavreComponent:{
     marginBottom: 200,    
@@ -236,22 +175,6 @@ const styles = StyleSheet.create({
     marginRight: -14, 
     marginBottom: -15, 
   },
-  filterBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 10,
-  },
-  filterButton: {
-    padding: 8,
-  },
-  filterButtonText: {
-    color: '#16A2CC',
-    fontFamily: 'Kurale_400Regular',
-  },
-  activeFilter: {
-    borderBottomWidth: 2,
-    borderBottomColor: '#16A2CC',
-},
   likeContainer: {
     flexDirection:'row',
     justifyContent:'flex-end',
