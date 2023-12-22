@@ -22,48 +22,12 @@ export default function Cadavre({navigation, route }) {
         return `${day}/${month}/${year}`;
     };
     
-    //function to add a like with the API, it also needs to update the localstorage
+    //function to add or remove a like with the API, it also needs to update the localstorage
     const addLike = async () => {;
 
         cadavreAlreadyLiked = await AsyncStorage.getItem(cadavre_id.id.toString());
 
-        if(cadavreAlreadyLiked === 'false') {
-            if (cadavreData) {
-                try {
-                    const response = await fetch(`https://jbienvenu.alwaysdata.net/loufok/api/cadavre/like`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ idCadavre: cadavreData.id_cadavre }), // Assuming 'id' is the identifier of your cadavre
-                    });
-
-                    if (response.ok) {
-                        // Assuming the API returns updated cadavre data after adding a like
-
-                        AsyncStorage.setItem(
-                            cadavre_id.id.toString(),
-                            'true',
-                        );
-
-                        cadavreData.nb_jaime++;
-                        cadavreLike();
-
-                        setIsLiked(true);
-
-                        // setCadavreData(updatedCadavre);
-                    } else {
-                        console.error('Failed to add like');
-                        // Handle error scenarios here
-                    }
-
-                } catch (error) {
-                    console.error('Error adding like:', error);
-                    // Handle network errors or exceptions here
-                }
-            }
-
-        } else {
+        if(cadavreAlreadyLiked === 'true') {
             if(cadavreData) {
                 try {
                     loadFonts();
@@ -96,6 +60,42 @@ export default function Cadavre({navigation, route }) {
 
                 } catch (error) {
                     console.error('Error removing like:', error);
+                    // Handle network errors or exceptions here
+                }
+            }
+
+        } else {
+            if (cadavreData) {
+                try {
+                    const response = await fetch(`https://jbienvenu.alwaysdata.net/loufok/api/cadavre/like`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ idCadavre: cadavreData.id_cadavre }), // Assuming 'id' is the identifier of your cadavre
+                    });
+
+                    if (response.ok) {
+                        // Assuming the API returns updated cadavre data after adding a like
+
+                        AsyncStorage.setItem(
+                            cadavre_id.id.toString(),
+                            'true',
+                        );
+
+                        cadavreData.nb_jaime++;
+                        cadavreLike();
+
+                        setIsLiked(true);
+
+                        // setCadavreData(updatedCadavre);
+                    } else {
+                        console.error('Failed to add like');
+                        // Handle error scenarios here
+                    }
+
+                } catch (error) {
+                    console.error('Error adding like:', error);
                     // Handle network errors or exceptions here
                 }
             }
