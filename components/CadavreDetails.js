@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, Pressable, StyleSheet, SafeAreaView, FlatList, Image } from 'react-native';
 import { useFonts, Kurale_400Regular } from '@expo-google-fonts/kurale';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SplashScreen from 'expo-splash-screen';
 import heartEmpty from '../assets/images/heart_empty.png';
 import * as Font from 'expo-font';
@@ -8,31 +9,33 @@ import * as Font from 'expo-font';
 // Inside your component
 const loadFonts = async () => {
   await Font.loadAsync({
-    Kurale_400Regular: require('@expo-google-fonts/kurale'),
-    // Add other fonts if needed
+    Kurale_400Regular: require('@expo-google-fonts/kurale')
   });
 };
+
 // Function to log AsyncStorage data
 const logAsyncStorageData = async () => {
-  try {
-    // Replace 'your_key' with the key you want to retrieve data for
-    const data = await AsyncStorage.getItem('your_key');
-
-    if (data !== null) {
-      console.log('AsyncStorage Data:', data);
-      // If the data exists, it will be logged
-    } else {
-      console.log('No data found in AsyncStorage');
+    try {
+      // Replace 'your_key' with the key you want to retrieve data for
+      console.log(AsyncStorage.getItem('isLiked'));
+      console.log(AsyncStorage.getItem('addLike'));
+      console.log(AsyncStorage.getItem('setIsLiked'));
+      console.log(AsyncStorage.getItem('IsLiked'));
+  
+      if (data !== null) {
+        console.log('AsyncStorage Data:', data);
+        // If the data exists, it will be logged
+      } else {
+        console.log('No data found in AsyncStorage');
+      }
+    } catch (error) {
+      console.error('Error retrieving data from AsyncStorage:', error);
+      // Handle errors while retrieving data
     }
-  } catch (error) {
-    console.error('Error retrieving data from AsyncStorage:', error);
-    // Handle errors while retrieving data
-  }
-};
-
-// Call the function to log AsyncStorage data
-logAsyncStorageData();
-
+  };
+  
+  // Call the function to log AsyncStorage data
+  logAsyncStorageData();
 
 //change date format
 const formatDate = (dateString) => {
@@ -85,13 +88,10 @@ const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, con
 
     setFilteredData(sortedData);
   };
-
-    const [loaded] = useFonts({
-      Kurale_400Regular,
-    });
-  
+  const [loaded] = useFonts({
+    Kurale_400Regular,
+  });
     useEffect(() => {
-      loadFonts();
       async function fetchData() {
         try {
           const response = await fetch('https://jbienvenu.alwaysdata.net/loufok/api/cadavres');
@@ -118,7 +118,7 @@ const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, con
       }
     
       fetchData();
-    }, [filter]);
+    }, [filter, loadFonts]);
 
   //render Item thx to const Item
   const renderItem = ({ item }) => (

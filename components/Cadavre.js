@@ -2,19 +2,40 @@ import { View, Text, StyleSheet, ScrollView, Image, Pressable } from 'react-nati
 import Header from './Header';
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFonts, Kurale_400Regular } from '@expo-google-fonts/kurale';
 import * as SplashScreen from 'expo-splash-screen';
 import heartEmpty from '../assets/images/heart_empty.png';
 import heartFull from '../assets/images/heart_full.png';
+//import { useFonts, Kurale_400Regular } from '@expo-google-fonts/kurale';
 import * as Font from 'expo-font';
 
 // Inside your component
 const loadFonts = async () => {
   await Font.loadAsync({
-    Kurale_400Regular: require('@expo-google-fonts/kurale'),
-    // Add other fonts if needed
+    Kurale_400Regular: require('@expo-google-fonts/kurale')
   });
 };
+
+// Function to log AsyncStorage data
+const logAsyncStorageData = async () => {
+    try {
+      // Replace 'your_key' with the key you want to retrieve data for
+      const data = await AsyncStorage.getItem('100');
+  
+      if (data !== null) {
+        console.log('AsyncStorage Data:', data);
+        // If the data exists, it will be logged
+      } else {
+        console.log('No data found in AsyncStorage');
+      }
+    } catch (error) {
+      console.error('Error retrieving data from AsyncStorage:', error);
+      // Handle errors while retrieving data
+    }
+  };
+  
+  // Call the function to log AsyncStorage data
+  logAsyncStorageData();
+  
 
 //change date format from YYYY-MM-DD to DD/MM/YYYY
 const formatDate = (dateString) => {
@@ -33,7 +54,6 @@ export default function Cadavre({navigation, route }) {
         if(!cadavreAlreadyLiked) {
             if (cadavreData) {
                 try {
-                    loadFonts();
                     const response = await fetch(`https://jbienvenu.alwaysdata.net/loufok/api/cadavre/like`, {
                         method: 'POST',
                         headers: {
@@ -73,14 +93,9 @@ export default function Cadavre({navigation, route }) {
 
     };
 
-    
-
     //const 
     const [cadavreData, setCadavreData] = useState(null);
     const { cadavre_id } = route.params;
-    const [loaded] = useFonts({
-        Kurale_400Regular,
-      });
 
     const [isLiked, setIsLiked] = useState(false);
 
@@ -101,7 +116,9 @@ export default function Cadavre({navigation, route }) {
             .catch((error) => {
                 console.error(error);
             });
-    }, [cadavre_id, loaded]);
+    }, [cadavre_id, loadFonts]);
+
+    console.log(AsyncStorage.getItem('loadFonts'));
 
     //return the number of likes
     const cadavreLike= () =>{
