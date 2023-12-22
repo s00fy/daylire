@@ -21,7 +21,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.demothemann.Daylire"
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -36,6 +37,11 @@
           ]
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "b3f639d7-6ea1-4c80-bb9a-c6a1defd6216"
+      }
+    }
   }
 }

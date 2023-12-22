@@ -30,7 +30,7 @@ export default function Cadavre({navigation, route }) {
 
         cadavreAlreadyLiked = await AsyncStorage.getItem(cadavre_id.id.toString());
 
-        if(!cadavreAlreadyLiked) {
+        if(cadavreAlreadyLiked === 'false') {
             if (cadavreData) {
                 try {
                     loadFonts();
@@ -54,7 +54,6 @@ export default function Cadavre({navigation, route }) {
                         cadavreLike();
 
                         setIsLiked(true);
-                        console.log(isLiked);
 
                         // setCadavreData(updatedCadavre);
                     } else {
@@ -67,8 +66,43 @@ export default function Cadavre({navigation, route }) {
                     // Handle network errors or exceptions here
                 }
             }
-            setIsLiked(true);
-            console.log(isLiked);
+
+        } else {
+            if(cadavreData) {
+                try {
+                    loadFonts();
+                    const response = await fetch(`https://jbienvenu.alwaysdata.net/loufok/api/cadavre/dislike`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ idCadavre: cadavreData.id_cadavre }), // Assuming 'id' is the identifier of your cadavre
+                    });
+
+                    if (response.ok) {
+                        // Assuming the API returns updated cadavre data after adding a like
+
+                        AsyncStorage.setItem(
+                            cadavre_id.id.toString(),
+                            'false',
+                        );
+
+                        cadavreData.nb_jaime--;
+                        cadavreLike();
+
+                        setIsLiked(false);
+
+                        // setCadavreData(updatedCadavre);
+                    } else {
+                        console.error('Failed to remove like');
+                        // Handle error scenarios here
+                    }
+
+                } catch (error) {
+                    console.error('Error removing like:', error);
+                    // Handle network errors or exceptions here
+                }
+            }
         }
 
     };
@@ -157,7 +191,7 @@ export default function Cadavre({navigation, route }) {
                     }>
                     <Text style={styles.CadavreBackText}> ← Retour </Text>
                 </Pressable>
-                <Pressable style={styles.CadavreLike} onPress={() => addLike()} disabled={isLiked}>
+                <Pressable style={styles.CadavreLike} onPress={() => addLike()}>
                     <Text style={styles.CadavreLikeNumber} >{cadavreLike()}</Text>
                     <Image style={styles.CadavreLikeIcon} source={ isLiked ? heartFull : heartEmpty} resizeMode="contain" />
                 </Pressable>
