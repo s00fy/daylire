@@ -2,29 +2,26 @@ import { View, Text, StyleSheet, ScrollView, Image, Pressable } from 'react-nati
 import Header from './Header';
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFonts, Kurale_400Regular } from '@expo-google-fonts/kurale';
 import * as SplashScreen from 'expo-splash-screen';
 import heartEmpty from '../assets/images/heart_empty.png';
 import heartFull from '../assets/images/heart_full.png';
 import * as Font from 'expo-font';
 
-// Inside your component
-const loadFonts = async () => {
-  await Font.loadAsync({
-    Kurale_400Regular: require('@expo-google-fonts/kurale'),
-    // Add other fonts if needed
-  });
-};
-
-//change date format from YYYY-MM-DD to DD/MM/YYYY
-const formatDate = (dateString) => {
-    const [year, month, day] = dateString.split('-');
-    return `${day}/${month}/${year}`;
-};
-
 //component
 export default function Cadavre({navigation, route }) {
-
+    
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        Kurale_400Regular: require('@expo-google-fonts/kurale')
+      });
+    };
+    
+    //change date format from YYYY-MM-DD to DD/MM/YYYY
+    const formatDate = (dateString) => {
+        const [year, month, day] = dateString.split('-');
+        return `${day}/${month}/${year}`;
+    };
+    
     //function to add a like with the API, it also needs to update the localstorage
     const addLike = async () => {;
 
@@ -33,7 +30,6 @@ export default function Cadavre({navigation, route }) {
         if(cadavreAlreadyLiked === 'false') {
             if (cadavreData) {
                 try {
-                    loadFonts();
                     const response = await fetch(`https://jbienvenu.alwaysdata.net/loufok/api/cadavre/like`, {
                         method: 'POST',
                         headers: {
@@ -107,22 +103,16 @@ export default function Cadavre({navigation, route }) {
 
     };
 
-    
-
     //const 
     const [cadavreData, setCadavreData] = useState(null);
     const { cadavre_id } = route.params;
-    const [loaded] = useFonts({
-        Kurale_400Regular,
-      });
-
     const [isLiked, setIsLiked] = useState(false);
 
 
-      //fetch and get the font
+      //fetch and ensure font
       useEffect(() => {
         async function hideSplashScreen() {
-          if (loaded) {
+          if (loadFonts) {
             await SplashScreen.hideAsync();
           }
         }
@@ -135,7 +125,7 @@ export default function Cadavre({navigation, route }) {
             .catch((error) => {
                 console.error(error);
             });
-    }, [cadavre_id, loaded]);
+    }, [cadavre_id, loadFonts]);
 
     //return the number of likes
     const cadavreLike= () =>{
