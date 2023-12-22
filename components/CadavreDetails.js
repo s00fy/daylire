@@ -101,6 +101,7 @@ const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, con
             <Text>Loading ...</Text>
         ) : (
           <FlatList
+            style={styles.list}
             data={filteredData}
             renderItem={renderItem}
             keyExtractor={(item) => item.id_cadavre}
@@ -112,9 +113,9 @@ const Item = ({ id, title, date_debut_cadavre, navigation, date_fin_cadavre, con
 }
 
 const styles = StyleSheet.create({
-  buttonSecond: {
-    backgroundColor: 'none',
-    color: '#16A2CC',
+  list: {
+    paddingBottom:50,
+    marginBottom:50,
   },
   button: {
     padding: 15,
@@ -135,7 +136,6 @@ const styles = StyleSheet.create({
     borderBottomRightRadius:20,
     margin:25,
     marginLeft:0,
-    paddingBottom:15,
   },
   cadavreComponent:{
     marginBottom: 200,    
